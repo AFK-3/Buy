@@ -81,9 +81,11 @@ tasks.test{
 	finalizedBy(tasks.jacocoTestReport)
 }
 
-tasks.jacocoTestReport{
-	reports {
-		xml.required = true
-	}
+tasks.jacocoTestReport {
 	dependsOn(tasks.test)
+	reports {
+		xml.required.set(true)
+		csv.required.set(true)
+		html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+	}
 }
