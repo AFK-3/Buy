@@ -8,5 +8,5 @@ public class Transaction extends ProductContainer{
     private String transactionId;
     private String username;
     private boolean status;
-
+    private String deliveryLocation;
 }
