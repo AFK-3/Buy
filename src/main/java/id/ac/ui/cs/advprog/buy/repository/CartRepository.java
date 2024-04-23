@@ -3,38 +3,39 @@ package id.ac.ui.cs.advprog.buy.repository;
 import id.ac.ui.cs.advprog.buy.model.Cart;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Repository
-public class CartRepository extends ProductContainerRepository{
-    private final Map<String, Cart> cartData = new HashMap<>();
+public class CartRepository{
+    private final List<Cart> cartData = new ArrayList<>();
 
-    @Override
-    public Cart create(String username){
-        Cart newCart = new Cart();
-        cartData.put(username,newCart);
-        return newCart;
+    public Cart create(Cart cart){
+        cartData.add(cart);
+        return cart;
     }
 
-    public Cart update(Cart updatedCart, String username){
-        cartData.put(username,updatedCart);
-        return updatedCart;
+    public Cart update(Cart updatedCart){
+        for (Cart cart : cartData){
+            if (cart.getUsername().equals(updatedCart.getUsername())){
+                cart.setListings(updatedCart.getListings());
+                cart.setTotalPrice(updatedCart.getTotalPrice());
+                return cart;
+            }
+        }
+        throw new NoSuchElementException();
     }
 
-    public Map<String,Cart> findAll(){
+    public List<Cart> findAll(){
         return cartData;
     }
 
-    @Override
-    public Cart filterByIdentifier(String username){
-        return cartData.get(username);
-    }
-
-    public Cart clearCart(Cart deletedCart){
-        Map<String,Long> deletedCartListings = deletedCart.getListings();
-        deletedCartListings.clear();
-        deletedCart.setListings(deletedCartListings);
-        return deletedCart;
+    public Cart findByUsername(String username){
+        for (Cart cart: cartData){
+            if (cart.getUsername().equals(username))
+                return cart;
+        }
+        throw new NoSuchElementException();
     }
 }
