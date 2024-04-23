@@ -3,7 +3,7 @@ package id.ac.ui.cs.advprog.buy.model;
 import id.ac.ui.cs.advprog.buy.enums.TransactionStatus;
 import lombok.Getter;
 
-import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 public class Transaction {
@@ -11,10 +11,10 @@ public class Transaction {
     private String username;
     private String status;
     private String deliveryLocation;
-    private HashMap<String,Integer> listings;
+    private Map<String,Integer> listings;
     private long totalPrice;
 
-    public Transaction(String transactionId, String username, String deliveryLocation, HashMap<String,Integer> listings, long totalPrice){
+    public Transaction(String transactionId, String username, String deliveryLocation, Map<String,Integer> listings, long totalPrice){
         this.transactionId = transactionId;
         this.username = username;
         this.deliveryLocation = deliveryLocation;
@@ -26,7 +26,7 @@ public class Transaction {
         this.totalPrice = totalPrice;
     }
 
-    public Transaction(String transactionId, String username, String deliveryLocation, HashMap<String,Integer> listings, long totalPrice,String status){
+    public Transaction(String transactionId, String username, String deliveryLocation, Map<String,Integer> listings, long totalPrice,String status){
         this(transactionId, username, deliveryLocation, listings, totalPrice);
         this.setStatus(status);
     }
