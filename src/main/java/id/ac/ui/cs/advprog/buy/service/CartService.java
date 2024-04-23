@@ -9,7 +9,7 @@ public interface CartService {
     public Cart create(Cart cart);
     public List<Cart> findAll();
     public Cart findByUsername(String username);
-    public Cart addListings(Map<String,Integer> additionalLisitngs, String username);
+    public Cart addListings(Map<String,Integer> additionalListings, String username);
     public Cart reduceListings(Map<String,Integer> reducedListings, String username);
     public Cart deleteListing(String listingId, String username);
     public Cart updateTotalPrice(long newPrice, String username);
