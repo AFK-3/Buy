@@ -4,20 +4,30 @@ import id.ac.ui.cs.advprog.buy.model.Cart;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 @Repository
 public class CartRepository extends ProductContainerRepository{
     private final Map<String, Cart> cartData = new HashMap<>();
 
-    public Cart updateCart(Cart updatedCart, String username){
+    @Override
+    public Cart create(String username){
+        Cart newCart = new Cart();
+        cartData.put(username,newCart);
+        return newCart;
+    }
+
+    public Cart update(Cart updatedCart, String username){
         cartData.put(username,updatedCart);
         return updatedCart;
     }
 
+    public Map<String,Cart> findAll(){
+        return cartData;
+    }
+
     @Override
-    public Cart filterByUser(String username){
+    public Cart filterByIdentifier(String username){
         return cartData.get(username);
     }
 
