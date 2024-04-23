@@ -4,6 +4,7 @@ import id.ac.ui.cs.advprog.buy.model.Cart;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -27,8 +28,8 @@ public class CartRepository{
         throw new NoSuchElementException();
     }
 
-    public List<Cart> findAll(){
-        return cartData;
+    public Iterator<Cart> findAll(){
+        return cartData.iterator();
     }
 
     public Cart findByUsername(String username){
