@@ -7,14 +7,11 @@ import java.util.Map;
 
 @Repository
 abstract public class ProductContainerRepository {
-    abstract ProductContainer filterByUser(String username);
+    abstract ProductContainer create(String identifier);
+    abstract ProductContainer filterByIdentifier(String identifier);
     public void addTo(ProductContainer productContainer, Map<String,Long> addListings){
         Map<String,Long> oldListings = productContainer.getListings();
         oldListings.putAll(addListings);
         productContainer.setListings(oldListings);
-    }
-    public long updateTotalPrice(ProductContainer productContainer,long newPrice){
-        productContainer.setTotalPrice(newPrice);
-        return newPrice;
     }
 }
