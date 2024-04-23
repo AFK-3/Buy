@@ -3,7 +3,6 @@ package id.ac.ui.cs.advprog.buy.controller;
 import id.ac.ui.cs.advprog.buy.model.Cart;
 import id.ac.ui.cs.advprog.buy.model.Transaction;
 import id.ac.ui.cs.advprog.buy.model.TransactionFactory;
-import id.ac.ui.cs.advprog.buy.repository.CartRepository;
 import id.ac.ui.cs.advprog.buy.service.CartService;
 import id.ac.ui.cs.advprog.buy.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,13 +132,13 @@ public class BuyController {
         return ResponseEntity.ok(allTransaction);
     }
 
-    @GetMapping("/transaction/{username}")
-    public ResponseEntity<List<Transaction>> getTransactionByUser(@PathVariable("username")String username){
+    @GetMapping("/transaction/username")
+    public ResponseEntity<List<Transaction>> getTransactionByUser(@RequestParam("usr")String username){
         List<Transaction> allTransaction = transactionService.findByUsername(username);
         return ResponseEntity.ok(allTransaction);
     }
 
-    @GetMapping("/cart")
+    @GetMapping("/transaction/id")
     public ResponseEntity<?> getTransactionById(@RequestParam("id") String id){
         try{
             Transaction transaction = transactionService.findById(id);
