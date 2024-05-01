@@ -18,6 +18,8 @@ public class Transaction {
         this.transactionId = transactionId;
         this.username = username;
         this.deliveryLocation = deliveryLocation;
+        this.status = TransactionStatus.WAITING_PAYMENT.getValue();
+
         if (listings.isEmpty()){
             throw new IllegalArgumentException();
         } else {
