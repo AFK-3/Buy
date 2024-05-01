@@ -37,4 +37,10 @@ class CartTest {
     void testGetCartPrice(){
         assertEquals(10000,this.cart.getTotalPrice());
     }
+
+    @Test
+    void testSetUsername(){
+        this.cart.setUsername("akun-2");
+        assertEquals("akun-2",this.cart.getUsername());
+    }
 }
