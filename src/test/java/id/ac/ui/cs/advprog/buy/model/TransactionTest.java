@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TransactionTest {
+class TransactionTest {
     Transaction transaction1;
     Transaction transaction2;
 
