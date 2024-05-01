@@ -1,11 +1,13 @@
 package id.ac.ui.cs.advprog.buy.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import id.ac.ui.cs.advprog.buy.model.Cart;
 import id.ac.ui.cs.advprog.buy.model.Transaction;
 import id.ac.ui.cs.advprog.buy.model.TransactionFactory;
 import id.ac.ui.cs.advprog.buy.service.CartService;
 import id.ac.ui.cs.advprog.buy.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,50 +33,60 @@ public class BuyController {
     }
 
     @PostMapping("/cart")
-    public ResponseEntity<Cart> addToCart(@RequestParam("usr") String username, @RequestBody Map<String,Integer> addListings){
+    public ResponseEntity<?> addToCart(@RequestParam("usr") String username,@RequestHeader("Authorization") String token, @RequestBody Map<String,Integer> addListings){
+        Cart cart;
         try {
-            Cart cart = cartService.addListings(addListings,username);
-            // TODO : Jalankan service update price
-            return ResponseEntity.ok(cart);
+            cart = cartService.addListings(addListings,username);
         } catch (NoSuchElementException e){
-            Cart cart = new Cart(username);
+            cart = new Cart(username);
             cart.setListings(addListings);
             cartService.create(cart);
-            // TODO : Jalankan service update price
+        }
+
+        try {
+            cartService.updateTotalPrice(username,token);
             return ResponseEntity.ok(cart);
+        } catch (JSONException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to parse JSON");
         }
     }
 
     @PutMapping("/cart/reduce")
-    public ResponseEntity<?> reduceListing(@RequestParam("usr") String username, @RequestBody Map<String,Integer> reduceListings){
+    public ResponseEntity<?> reduceListing(@RequestParam("usr") String username, @RequestHeader("Authorization") String token, @RequestBody Map<String,Integer> reduceListings){
         try{
             Cart updatedCart = cartService.reduceListings(reduceListings,username);
-            // TODO : Jalankan update price
+            cartService.updateTotalPrice(username,token);
             return ResponseEntity.ok(updatedCart);
         } catch (NoSuchElementException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart not found for user: " + username);
+        } catch (JSONException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to parse JSON");
         }
     }
 
     @PutMapping("/cart/add")
-    public ResponseEntity<?> addListing(@RequestParam("usr") String username, @RequestBody Map<String,Integer> addListings){
+    public ResponseEntity<?> addListing(@RequestParam("usr") String username, @RequestHeader("Authorization") String token, @RequestBody Map<String,Integer> addListings){
         try{
             Cart updatedCart = cartService.addListings(addListings,username);
-            // TODO : Jalankan update price
+            cartService.updateTotalPrice(username,token);
             return ResponseEntity.ok(updatedCart);
         } catch (NoSuchElementException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart not found for user: " + username);
+        } catch (JSONException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to parse JSON");
         }
     }
 
     @DeleteMapping("/cart")
-    public ResponseEntity<?> deleteListing(@RequestParam("usr")String username, @RequestParam("lstId") String listingId){
+    public ResponseEntity<?> deleteListing(@RequestParam("usr")String username, @RequestParam("lstId") String listingId, @RequestHeader("Authorization") String token){
         try{
             Cart updatedCart = cartService.deleteListing(listingId,username);
-            // TODO : Jalankan update price
+            cartService.updateTotalPrice(username,token);
             return ResponseEntity.ok(updatedCart);
         } catch (NoSuchElementException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart not found for user: " + username);
+        } catch (JSONException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to parse JSON");
         }
     }
 
@@ -95,7 +107,7 @@ public class BuyController {
     }
 
     @PostMapping("/transaction")
-    public ResponseEntity<?> checkout(@RequestBody Map<String,String> userData){
+    public ResponseEntity<?> checkout(@RequestBody Map<String,String> userData, @RequestHeader("Authorization") String token){
         String username = userData.get("username");
         String deliveryLocation = userData.get("deliveryLocation");
 
@@ -108,11 +120,13 @@ public class BuyController {
             UUID uuid = UUID.randomUUID();
 
             Transaction transaction = TransactionFactory.createTransaction(selectedCart,uuid.toString(),deliveryLocation);
-            transactionService.create(transaction);
+            transactionService.create(transaction,token);
             return ResponseEntity.ok(transaction);
 
         } catch (NoSuchElementException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart not found for user: " + username);
+        } catch (JsonProcessingException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not create payment transaction");
         }
     }
 
@@ -147,7 +161,4 @@ public class BuyController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Transaction not found for id: " + id);
         }
     }
-
-
-
 }
