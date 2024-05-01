@@ -30,7 +30,7 @@ class CartTest {
     void testGetCartListings(){
         Map<String,Integer> listings = new HashMap<>();
         listings.put("1",3); listings.put("2",4);
-        assertTrue(listings.equals(this.cart.getListings()));
+        assertEquals(listings, this.cart.getListings());
     }
 
     @Test
