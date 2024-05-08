@@ -22,7 +22,7 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     public Transaction create(Transaction transaction,String token) throws JsonProcessingException {
-        transactionRepository.create(transaction);
+        transactionRepository.save(transaction);
 
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -47,29 +47,25 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     public List<Transaction> findAll() {
-        Iterator<Transaction> transactionIterator = transactionRepository.findAll();
-        List<Transaction>  allTransaction = new ArrayList<>();
-        transactionIterator.forEachRemaining(allTransaction::add);
-        return allTransaction;
+        return transactionRepository.findAll();
     }
 
     @Override
     public Transaction findById(String transactionId) {
-        return transactionRepository.findById(transactionId);
+        Optional<Transaction> transaction = transactionRepository.findById(transactionId);
+        return transaction.orElseThrow(NoSuchElementException::new);
     }
 
     @Override
     public List<Transaction> findByUsername(String username) {
-        Iterator<Transaction> userTransaction = transactionRepository.findByUsername(username);
-        List<Transaction> userTransactionList = new ArrayList<>();
-        userTransaction.forEachRemaining(userTransactionList::add);
-        return userTransactionList;
+        return transactionRepository.findByUsername(username);
     }
 
     @Override
     public Transaction updateStatus(String transactionId, String status) {
-        Transaction transaction = transactionRepository.findById(transactionId);
+        Optional<Transaction> optionalTransaction = transactionRepository.findById(transactionId);
+        Transaction transaction = optionalTransaction.orElseThrow(NoSuchElementException::new);
         transaction.setStatus(status);
-        return transactionRepository.update(transaction);
+        return transactionRepository.save(transaction);
     }
 }
