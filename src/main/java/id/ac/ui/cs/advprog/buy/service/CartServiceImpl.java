@@ -13,10 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpHeaders;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CartServiceImpl implements CartService{
@@ -26,26 +23,25 @@ public class CartServiceImpl implements CartService{
 
     @Override
     public Cart create(Cart cart) {
-        cartRepository.create(cart);
+        cartRepository.save(cart);
         return cart;
     }
 
     @Override
     public List<Cart> findAll() {
-        Iterator<Cart> cartIterator = cartRepository.findAll();
-        List<Cart> allCart = new ArrayList<>();
-        cartIterator.forEachRemaining(allCart::add);
-        return allCart;
+        return cartRepository.findAll();
     }
 
     @Override
     public Cart findByUsername(String username) {
-        return cartRepository.findByUsername(username);
+        Optional<Cart> cart = cartRepository.findById(username);
+        return cart.orElseThrow(NoSuchElementException::new);
     }
 
     @Override
     public Cart addListings(Map<String, Integer> additionalListings, String username) {
-        Cart cart = cartRepository.findByUsername(username);
+        Optional<Cart> optionalCart = cartRepository.findById(username);
+        Cart cart = optionalCart.orElseThrow(NoSuchElementException::new);
 
         Map<String, Integer> currentListings = cart.getListings();
 
@@ -54,12 +50,14 @@ public class CartServiceImpl implements CartService{
         }
 
         cart.setListings(currentListings);
-        return cartRepository.update(cart);
+        return cartRepository.save(cart);
     }
 
     @Override
     public Cart reduceListings(Map<String, Integer> reducedListings, String username) {
-        Cart cart = cartRepository.findByUsername(username);
+        Optional<Cart> optionalCart = cartRepository.findById(username);
+        Cart cart = optionalCart.orElseThrow(NoSuchElementException::new);
+
         Map<String, Integer> currentListings = cart.getListings();
 
         for (Map.Entry<String, Integer> entry : reducedListings.entrySet()) {
@@ -77,22 +75,27 @@ public class CartServiceImpl implements CartService{
         }
 
         cart.setListings(currentListings);
-        return cartRepository.update(cart);
+        return cartRepository.save(cart);
     }
 
     @Override
     public Cart deleteListing(String listingId, String username) {
-        Cart cart = cartRepository.findByUsername(username);
+        Optional<Cart> optionalCart = cartRepository.findById(username);
+        Cart cart = optionalCart.orElseThrow(NoSuchElementException::new);
+
         Map<String,Integer> currentListings = cart.getListings();
         currentListings.remove(listingId);
+
         cart.setListings(currentListings);
-        return cartRepository.update(cart);
+        return cartRepository.save(cart);
     }
 
     @Override
     @Async
     public void updateTotalPrice(String username, String token) throws JSONException {
-        Cart cart = cartRepository.findByUsername(username);
+        Optional<Cart> optionalCart = cartRepository.findById(username);
+        Cart cart = optionalCart.orElseThrow(NoSuchElementException::new);
+
         Map<String,Integer> listings = cart.getListings();
 
         String getListingIdUrl = authUrl + "listing/" + "get-by-id/";
@@ -119,6 +122,6 @@ public class CartServiceImpl implements CartService{
         }
 
         cart.setTotalPrice(totalPrice);
-        cartRepository.update(cart);
+        cartRepository.save(cart);
     }
 }
