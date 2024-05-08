@@ -13,6 +13,6 @@ public interface CartService {
     public Cart addListings(Map<String,Integer> additionalListings, String username);
     public Cart reduceListings(Map<String,Integer> reducedListings, String username);
     public Cart deleteListing(String listingId, String username);
-    public Cart updateTotalPrice(String username, String token) throws JSONException;
+    public void updateTotalPrice(String username, String token) throws JSONException;
 
 }

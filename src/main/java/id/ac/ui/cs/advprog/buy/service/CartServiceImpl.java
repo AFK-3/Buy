@@ -8,6 +8,7 @@ import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpHeaders;
@@ -89,7 +90,8 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public Cart updateTotalPrice(String username, String token) throws JSONException {
+    @Async
+    public void updateTotalPrice(String username, String token) throws JSONException {
         Cart cart = cartRepository.findByUsername(username);
         Map<String,Integer> listings = cart.getListings();
 
@@ -117,6 +119,6 @@ public class CartServiceImpl implements CartService{
         }
 
         cart.setTotalPrice(totalPrice);
-        return cartRepository.update(cart);
+        cartRepository.update(cart);
     }
 }
