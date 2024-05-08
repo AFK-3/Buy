@@ -93,7 +93,7 @@ public class CartServiceImpl implements CartService{
         Cart cart = cartRepository.findByUsername(username);
         Map<String,Integer> listings = cart.getListings();
 
-        String getListingIdUrl = authUrl + "/get-by-id/";
+        String getListingIdUrl = authUrl + "listing/" + "get-by-id/";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization",token);

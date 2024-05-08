@@ -32,8 +32,8 @@ public class TransactionServiceImpl implements TransactionService{
         paymentRequest.put("paymentStatus", "WAITING_RESPONSE");
         paymentRequest.put("paymentAmount",transaction.getTotalPrice());
         paymentRequest.put("buyerUsername",transaction.getUsername());
-
         String jsonRequest = objectMapper.writeValueAsString(paymentRequest);
+
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization",token);
         headers.set("Content-Type", "application/json");

@@ -1,6 +1,7 @@
 package id.ac.ui.cs.advprog.buy.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import id.ac.ui.cs.advprog.buy.middleware.AuthMiddleware;
 import id.ac.ui.cs.advprog.buy.model.Cart;
 import id.ac.ui.cs.advprog.buy.model.Transaction;
 import id.ac.ui.cs.advprog.buy.model.TransactionFactory;
@@ -33,7 +34,17 @@ public class BuyController {
     }
 
     @PostMapping("/cart")
-    public ResponseEntity<?> addToCart(@RequestParam("usr") String username,@RequestHeader("Authorization") String token, @RequestBody Map<String,Integer> addListings){
+    public ResponseEntity<?> addToCart(@RequestHeader("Authorization") String token, @RequestBody Map<String,Integer> addListings){
+        String username = AuthMiddleware.getUsernameFromToken(token);
+        String userRole = AuthMiddleware.getRoleFromToken(token);
+
+        if (username == null || userRole == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+        if (userRole.equals("STAFF")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Role must be Buyer/Seller");
+        }
+
         Cart cart;
         try {
             cart = cartService.addListings(addListings,username);
@@ -46,13 +57,24 @@ public class BuyController {
         try {
             cartService.updateTotalPrice(username,token);
             return ResponseEntity.ok(cart);
-        } catch (JSONException e){
+        }
+        catch (JSONException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to parse JSON");
         }
     }
 
     @PutMapping("/cart/reduce")
-    public ResponseEntity<?> reduceListing(@RequestParam("usr") String username, @RequestHeader("Authorization") String token, @RequestBody Map<String,Integer> reduceListings){
+    public ResponseEntity<?> reduceListing(@RequestHeader("Authorization") String token, @RequestBody Map<String,Integer> reduceListings){
+        String username = AuthMiddleware.getUsernameFromToken(token);
+        String userRole = AuthMiddleware.getRoleFromToken(token);
+
+        if (username == null || userRole == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+        if (userRole.equals("STAFF")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Role must be Buyer/Seller");
+        }
+
         try{
             Cart updatedCart = cartService.reduceListings(reduceListings,username);
             cartService.updateTotalPrice(username,token);
@@ -65,7 +87,17 @@ public class BuyController {
     }
 
     @PutMapping("/cart/add")
-    public ResponseEntity<?> addListing(@RequestParam("usr") String username, @RequestHeader("Authorization") String token, @RequestBody Map<String,Integer> addListings){
+    public ResponseEntity<?> addListing(@RequestHeader("Authorization") String token, @RequestBody Map<String,Integer> addListings){
+        String username = AuthMiddleware.getUsernameFromToken(token);
+        String userRole = AuthMiddleware.getRoleFromToken(token);
+
+        if (username == null || userRole == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+        if (userRole.equals("STAFF")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Role must be Buyer/Seller");
+        }
+
         try{
             Cart updatedCart = cartService.addListings(addListings,username);
             cartService.updateTotalPrice(username,token);
@@ -78,7 +110,17 @@ public class BuyController {
     }
 
     @DeleteMapping("/cart")
-    public ResponseEntity<?> deleteListing(@RequestParam("usr")String username, @RequestParam("lstId") String listingId, @RequestHeader("Authorization") String token){
+    public ResponseEntity<?> deleteListing(@RequestParam("lstId") String listingId, @RequestHeader("Authorization") String token){
+        String username = AuthMiddleware.getUsernameFromToken(token);
+        String userRole = AuthMiddleware.getRoleFromToken(token);
+
+        if (username == null || userRole == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+        if (userRole.equals("STAFF")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Role must be Buyer/Seller");
+        }
+
         try{
             Cart updatedCart = cartService.deleteListing(listingId,username);
             cartService.updateTotalPrice(username,token);
@@ -108,10 +150,19 @@ public class BuyController {
 
     @PostMapping("/transaction")
     public ResponseEntity<?> checkout(@RequestBody Map<String,String> userData, @RequestHeader("Authorization") String token){
-        String username = userData.get("username");
+        String username = AuthMiddleware.getUsernameFromToken(token);
+        String userRole = AuthMiddleware.getRoleFromToken(token);
+
+        if (username == null || userRole == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+        if (userRole.equals("STAFF")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Role must be Buyer/Seller");
+        }
+
         String deliveryLocation = userData.get("deliveryLocation");
 
-        if (username == null || deliveryLocation == null){
+        if (deliveryLocation == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user data");
         }
 
@@ -131,7 +182,17 @@ public class BuyController {
     }
 
     @PutMapping("/transaction/{transactionid}")
-    public ResponseEntity<?> updateTransactionStatus(@PathVariable String transactionid, @RequestParam("status") String status){
+    public ResponseEntity<?> updateTransactionStatus(@PathVariable String transactionid, @RequestParam("status") String status, @RequestHeader("Authorization") String token){
+        String userRole = AuthMiddleware.getRoleFromToken(token);
+
+        if (userRole == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+
+        if (!userRole.equals("STAFF")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Role must be Staff");
+        }
+
         try{
             Transaction transaction = transactionService.updateStatus(transactionid,status);
             return ResponseEntity.ok(transaction);
