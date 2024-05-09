@@ -10,6 +10,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpHeaders;
 
@@ -92,6 +93,7 @@ public class CartServiceImpl implements CartService{
 
     @Override
     @Async
+    @Transactional
     public void updateTotalPrice(String username, String token) throws JSONException {
         Optional<Cart> optionalCart = cartRepository.findById(username);
         Cart cart = optionalCart.orElseThrow(NoSuchElementException::new);

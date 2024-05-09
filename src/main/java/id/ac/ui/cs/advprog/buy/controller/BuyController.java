@@ -57,8 +57,7 @@ public class BuyController {
         try {
             cartService.updateTotalPrice(username,token);
             return ResponseEntity.ok(cart);
-        }
-        catch (JSONException e){
+        } catch (JSONException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to parse JSON");
         }
     }
