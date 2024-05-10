@@ -21,6 +21,7 @@ public class CartServiceImpl implements CartService{
     @Autowired
     private CartRepository cartRepository;
     private final String authUrl = "http://35.198.243.155/";
+    private RestTemplate restTemplate = new RestTemplate();
 
     @Override
     public Cart create(Cart cart) {
@@ -101,7 +102,6 @@ public class CartServiceImpl implements CartService{
         Map<String,Integer> listings = cart.getListings();
 
         String getListingIdUrl = authUrl + "listing/" + "get-by-id/";
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization",token);
         HttpEntity<String> entity = new HttpEntity<>("body",headers);
