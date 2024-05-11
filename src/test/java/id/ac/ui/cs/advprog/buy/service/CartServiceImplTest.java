@@ -116,6 +116,27 @@ class CartServiceImplTest {
     }
 
     @Test
+    void testReduceListingsNewQuantityLessZero(){
+        Cart cart = getCarts().getFirst();
+
+        Map<String,Integer> reducedListings = new HashMap<>();
+        reducedListings.put("1",4);
+
+        Map<String,Integer> listingAfter = new HashMap<>();
+        listingAfter.put("2",4);
+        Cart cartAfter = getCarts().getFirst();
+        cartAfter.setListings(listingAfter);
+
+        when(cartRepository.findById(any(String.class))).thenReturn(Optional.of(cart));
+        when(cartRepository.save(cart)).thenReturn(cart);
+
+        Cart result = cartService.reduceListings(reducedListings,"1");
+        assertEquals(result.getListings(),cartAfter.getListings());
+        verify(cartRepository, times(1)).findById(any(String.class));
+        verify(cartRepository, times(1)).save(cart);
+    }
+
+    @Test
     void testDeleteListing(){
         Cart cart = getCarts().getFirst();
 
