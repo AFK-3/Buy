@@ -20,13 +20,13 @@ public class TransactionServiceImpl implements TransactionService{
     private TransactionRepository transactionRepository;
     private final String authUrl = "http://35.198.243.155/";
 
+    private RestTemplate restTemplate = new RestTemplate();
+
     @Override
     public Transaction create(Transaction transaction,String token) throws JsonProcessingException {
         transactionRepository.save(transaction);
 
-        RestTemplate restTemplate = new RestTemplate();
         ObjectMapper objectMapper = new ObjectMapper();
-
         Map<String, Object> paymentRequest = new HashMap<>();
         paymentRequest.put("id",transaction.getTransactionId());
         paymentRequest.put("paymentStatus", "WAITING_RESPONSE");
