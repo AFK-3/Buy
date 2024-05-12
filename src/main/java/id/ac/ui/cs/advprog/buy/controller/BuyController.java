@@ -27,6 +27,7 @@ public class BuyController {
 
     @Autowired
     private TransactionService transactionService;
+
     @GetMapping("/")
     @ResponseBody
     public String buyPage(){
@@ -38,11 +39,9 @@ public class BuyController {
         String username = AuthMiddleware.getUsernameFromToken(token);
         String userRole = AuthMiddleware.getRoleFromToken(token);
 
-        if (username == null || userRole == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
-        if (userRole.equals("STAFF")) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Role must be Buyer/Seller");
+        ResponseEntity<?> authResponse = authenticateBuyerSeller(username,userRole);
+        if (authResponse != null) {
+            return authResponse;
         }
 
         Cart cart;
@@ -67,11 +66,9 @@ public class BuyController {
         String username = AuthMiddleware.getUsernameFromToken(token);
         String userRole = AuthMiddleware.getRoleFromToken(token);
 
-        if (username == null || userRole == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
-        if (userRole.equals("STAFF")) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Role must be Buyer/Seller");
+        ResponseEntity<?> authResponse = authenticateBuyerSeller(username,userRole);
+        if (authResponse != null) {
+            return authResponse;
         }
 
         try{
@@ -90,11 +87,9 @@ public class BuyController {
         String username = AuthMiddleware.getUsernameFromToken(token);
         String userRole = AuthMiddleware.getRoleFromToken(token);
 
-        if (username == null || userRole == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
-        if (userRole.equals("STAFF")) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Role must be Buyer/Seller");
+        ResponseEntity<?> authResponse = authenticateBuyerSeller(username,userRole);
+        if (authResponse != null) {
+            return authResponse;
         }
 
         try{
@@ -113,11 +108,9 @@ public class BuyController {
         String username = AuthMiddleware.getUsernameFromToken(token);
         String userRole = AuthMiddleware.getRoleFromToken(token);
 
-        if (username == null || userRole == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
-        if (userRole.equals("STAFF")) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Role must be Buyer/Seller");
+        ResponseEntity<?> authResponse = authenticateBuyerSeller(username,userRole);
+        if (authResponse != null) {
+            return authResponse;
         }
 
         try{
@@ -152,11 +145,9 @@ public class BuyController {
         String username = AuthMiddleware.getUsernameFromToken(token);
         String userRole = AuthMiddleware.getRoleFromToken(token);
 
-        if (username == null || userRole == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
-        if (userRole.equals("STAFF")) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Role must be Buyer/Seller");
+        ResponseEntity<?> authResponse = authenticateBuyerSeller(username,userRole);
+        if (authResponse != null) {
+            return authResponse;
         }
 
         String deliveryLocation = userData.get("deliveryLocation");
@@ -220,5 +211,16 @@ public class BuyController {
         } catch (NoSuchElementException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Transaction not found for id: " + id);
         }
+    }
+
+    private ResponseEntity<?> authenticateBuyerSeller(String username,String userRole) {
+        if (username == null || userRole == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+        if (userRole.equals("STAFF")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Role must be Buyer/Seller");
+        }
+
+        return null;
     }
 }
