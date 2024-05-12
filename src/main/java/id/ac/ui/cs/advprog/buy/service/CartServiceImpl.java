@@ -3,6 +3,7 @@ package id.ac.ui.cs.advprog.buy.service;
 import id.ac.ui.cs.advprog.buy.model.Cart;
 import id.ac.ui.cs.advprog.buy.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.HttpEntity;
@@ -20,7 +21,9 @@ import java.util.*;
 public class CartServiceImpl implements CartService{
     @Autowired
     private CartRepository cartRepository;
-    private final String authUrl = "http://35.198.243.155/";
+
+    @Value("${auth.url}")
+    private String authUrl;
     private RestTemplate restTemplate = new RestTemplate();
 
     @Override

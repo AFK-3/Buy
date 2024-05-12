@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.buy.service;
 
+import id.ac.ui.cs.advprog.buy.middleware.AuthMiddleware;
 import id.ac.ui.cs.advprog.buy.model.Cart;
 import id.ac.ui.cs.advprog.buy.repository.CartRepository;
 import org.junit.jupiter.api.Test;
@@ -169,8 +170,8 @@ class CartServiceImplTest {
 
         System.out.println(entity);
 
-        Mockito.when(restTemplate.exchange("http://35.198.243.155/listing/get-by-id/1", HttpMethod.GET, entity, String.class)).thenReturn(responseEntity);
-        Mockito.when(restTemplate.exchange("http://35.198.243.155/listing/get-by-id/2", HttpMethod.GET, entity, String.class)).thenReturn(responseEntity);
+        Mockito.when(restTemplate.exchange(AuthMiddleware.authUrl + "listing/get-by-id/1", HttpMethod.GET, entity, String.class)).thenReturn(responseEntity);
+        Mockito.when(restTemplate.exchange(AuthMiddleware.authUrl + "listing/get-by-id/2", HttpMethod.GET, entity, String.class)).thenReturn(responseEntity);
 
         cartService.updateTotalPrice("1","a");
 

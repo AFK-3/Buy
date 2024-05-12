@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import id.ac.ui.cs.advprog.buy.model.Transaction;
 import id.ac.ui.cs.advprog.buy.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -18,7 +19,9 @@ import java.util.*;
 public class TransactionServiceImpl implements TransactionService{
     @Autowired
     private TransactionRepository transactionRepository;
-    private final String authUrl = "http://35.198.243.155/";
+
+    @Value("${auth.url}")
+    private String authUrl;
 
     private RestTemplate restTemplate = new RestTemplate();
 
@@ -40,7 +43,7 @@ public class TransactionServiceImpl implements TransactionService{
         HttpEntity<String> entity = new HttpEntity<>(jsonRequest, headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
-                authUrl + "/payment-request/create", HttpMethod.POST, entity, String.class);
+                authUrl + "payment-request/create", HttpMethod.POST, entity, String.class);
 
         return transaction;
     }

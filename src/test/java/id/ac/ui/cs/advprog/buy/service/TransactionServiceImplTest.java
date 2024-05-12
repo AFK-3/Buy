@@ -3,6 +3,7 @@ package id.ac.ui.cs.advprog.buy.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import id.ac.ui.cs.advprog.buy.enums.TransactionStatus;
+import id.ac.ui.cs.advprog.buy.middleware.AuthMiddleware;
 import id.ac.ui.cs.advprog.buy.model.Transaction;
 import id.ac.ui.cs.advprog.buy.repository.TransactionRepository;
 import org.junit.jupiter.api.Test;
@@ -49,12 +50,12 @@ class TransactionServiceImplTest {
         headers.set("Content-Type", "application/json");
         HttpEntity<String> entity = new HttpEntity<>(jsonRequest, headers);
         when(restTemplate.exchange(
-                "http://35.198.243.155/"+ "/payment-request/create", HttpMethod.POST, entity, String.class)).thenReturn(new ResponseEntity<>("body", HttpStatus.OK));
+                AuthMiddleware.authUrl + "/payment-request/create", HttpMethod.POST, entity, String.class)).thenReturn(new ResponseEntity<>("body", HttpStatus.OK));
 
         Transaction savedTransaction = transactionService.create(transaction,"token-1");
         assertEquals(transaction.getTransactionId(),savedTransaction.getTransactionId());
         verify(transactionRepository,times(1)).save(transaction);
-        verify(restTemplate, times(1)).exchange("http://35.198.243.155/"+ "/payment-request/create", HttpMethod.POST, entity, String.class);
+        verify(restTemplate, times(1)).exchange(AuthMiddleware.authUrl + "/payment-request/create", HttpMethod.POST, entity, String.class);
     }
 
     @Test
