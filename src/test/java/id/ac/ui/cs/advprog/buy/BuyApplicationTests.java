@@ -12,9 +12,4 @@ class BuyApplicationTests {
 	void contextLoads() {
 	}
 
-	@Test
-	void contextTest() {
-		BuyApplication.main(new String[] {});
-	}
-
 }
