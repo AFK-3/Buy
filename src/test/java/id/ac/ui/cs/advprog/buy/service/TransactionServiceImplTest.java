@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.*;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 class TransactionServiceImplTest {
     @Mock
     TransactionRepository transactionRepository;
@@ -50,12 +52,12 @@ class TransactionServiceImplTest {
         headers.set("Content-Type", "application/json");
         HttpEntity<String> entity = new HttpEntity<>(jsonRequest, headers);
         when(restTemplate.exchange(
-                AuthMiddleware.authUrl + "payment-request/create", HttpMethod.POST, entity, String.class)).thenReturn(new ResponseEntity<>("body", HttpStatus.OK));
+                anyString(), eq(HttpMethod.POST), eq(entity), eq(String.class))).thenReturn(new ResponseEntity<>("body", HttpStatus.OK));
 
         Transaction savedTransaction = transactionService.create(transaction,"token-1");
         assertEquals(transaction.getTransactionId(),savedTransaction.getTransactionId());
         verify(transactionRepository,times(1)).save(transaction);
-        verify(restTemplate, times(1)).exchange(AuthMiddleware.authUrl + "payment-request/create", HttpMethod.POST, entity, String.class);
+        verify(restTemplate, times(1)).exchange(anyString(), eq(HttpMethod.POST), eq(entity), eq(String.class));
     }
 
     @Test

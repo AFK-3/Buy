@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.http.*;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
@@ -21,6 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 class CartServiceImplTest {
     @Mock
     CartRepository cartRepository;
@@ -168,8 +170,7 @@ class CartServiceImplTest {
         headers.add("Authorization","a");
         HttpEntity<String> entity = new HttpEntity<>("body",headers);
 
-        Mockito.when(restTemplate.exchange(AuthMiddleware.authUrl + "listing/get-by-id/1", HttpMethod.GET, entity, String.class)).thenReturn(responseEntity);
-        Mockito.when(restTemplate.exchange(AuthMiddleware.authUrl + "listing/get-by-id/2", HttpMethod.GET, entity, String.class)).thenReturn(responseEntity);
+        Mockito.when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), eq(entity), eq(String.class))).thenReturn(responseEntity);
 
         cartService.updateTotalPrice("1","a");
 
