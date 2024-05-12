@@ -95,7 +95,8 @@ tasks.jacocoTestReport {
 
 
 	val excludes = listOf(
-			"id/ac/ui/cs/advprog/buy/middleware/AuthMiddleware.class"
+			"id/ac/ui/cs/advprog/buy/middleware/AuthMiddleware.class",
+			"id/ac/ui/cs/advprog/buy/BuyApplication.class"
 	)
 
 	classDirectories.setFrom(
