@@ -50,12 +50,12 @@ class TransactionServiceImplTest {
         headers.set("Content-Type", "application/json");
         HttpEntity<String> entity = new HttpEntity<>(jsonRequest, headers);
         when(restTemplate.exchange(
-                AuthMiddleware.authUrl + "/payment-request/create", HttpMethod.POST, entity, String.class)).thenReturn(new ResponseEntity<>("body", HttpStatus.OK));
+                AuthMiddleware.authUrl + "payment-request/create", HttpMethod.POST, entity, String.class)).thenReturn(new ResponseEntity<>("body", HttpStatus.OK));
 
         Transaction savedTransaction = transactionService.create(transaction,"token-1");
         assertEquals(transaction.getTransactionId(),savedTransaction.getTransactionId());
         verify(transactionRepository,times(1)).save(transaction);
-        verify(restTemplate, times(1)).exchange(AuthMiddleware.authUrl + "/payment-request/create", HttpMethod.POST, entity, String.class);
+        verify(restTemplate, times(1)).exchange(AuthMiddleware.authUrl + "payment-request/create", HttpMethod.POST, entity, String.class);
     }
 
     @Test

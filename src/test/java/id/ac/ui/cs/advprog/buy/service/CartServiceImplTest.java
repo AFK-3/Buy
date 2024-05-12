@@ -168,8 +168,6 @@ class CartServiceImplTest {
         headers.add("Authorization","a");
         HttpEntity<String> entity = new HttpEntity<>("body",headers);
 
-        System.out.println(entity);
-
         Mockito.when(restTemplate.exchange(AuthMiddleware.authUrl + "listing/get-by-id/1", HttpMethod.GET, entity, String.class)).thenReturn(responseEntity);
         Mockito.when(restTemplate.exchange(AuthMiddleware.authUrl + "listing/get-by-id/2", HttpMethod.GET, entity, String.class)).thenReturn(responseEntity);
 
