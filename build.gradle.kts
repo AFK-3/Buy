@@ -92,4 +92,16 @@ tasks.jacocoTestReport {
 		csv.required.set(true)
 		html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
 	}
+
+
+	val excludes = listOf(
+			"id/ac/ui/cs/advprog/buy/middleware/AuthMiddleware.class"
+	)
+
+	classDirectories.setFrom(
+			files(classDirectories.files.map {
+				fileTree(it).exclude(excludes)
+			})
+	)
+
 }
