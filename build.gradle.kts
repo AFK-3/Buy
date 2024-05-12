@@ -39,16 +39,20 @@ val junitJupiterVersion = "5.9.1"
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-configuration-processor")
 	compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 	annotationProcessor("org.projectlombok:lombok")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.postgresql:postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.seleniumhq.selenium:selenium-java:$seleniumJavaVersion")
 	testImplementation("io.github.bonigarcia:selenium-jupiter:$seleniumJupiterVersion")
 	testImplementation("io.github.bonigarcia:webdrivermanager:$webdrivermanagerVersion")
 	testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
+	testImplementation("com.h2database:h2")
 }
 
 tasks.register<Test>("unitTest"){
@@ -88,4 +92,17 @@ tasks.jacocoTestReport {
 		csv.required.set(true)
 		html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
 	}
+
+
+	val excludes = listOf(
+			"id/ac/ui/cs/advprog/buy/middleware/AuthMiddleware.class",
+			"id/ac/ui/cs/advprog/buy/BuyApplication.class"
+	)
+
+	classDirectories.setFrom(
+			files(classDirectories.files.map {
+				fileTree(it).exclude(excludes)
+			})
+	)
+
 }
