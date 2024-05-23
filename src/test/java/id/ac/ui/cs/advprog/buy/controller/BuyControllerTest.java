@@ -442,7 +442,7 @@ class BuyControllerTest {
     }
 
     @Test
-    public void testGetTransactionByUser() throws Exception {
+    void testGetTransactionByUser() throws Exception {
         Transaction transaction1 = new Transaction();
         Transaction transaction2 = new Transaction();
         List<Transaction> allTransaction = Arrays.asList(transaction1, transaction2);
@@ -455,7 +455,7 @@ class BuyControllerTest {
     }
 
     @Test
-    public void testGetTransactionByIdSuccess() throws Exception {
+    void testGetTransactionByIdSuccess() throws Exception {
         Transaction transaction = new Transaction();
         when(transactionService.findById(anyString())).thenReturn(transaction);
 
@@ -465,7 +465,7 @@ class BuyControllerTest {
     }
 
     @Test
-    public void testGetTransactionByIdNotFound() throws Exception {
+    void testGetTransactionByIdNotFound() throws Exception {
         when(transactionService.findById(anyString())).thenThrow(NoSuchElementException.class);
 
         mockMvc.perform(get("/transaction/id")
@@ -474,7 +474,7 @@ class BuyControllerTest {
     }
 
     @Test
-    public void testBuyPage() throws Exception {
+    void testBuyPage() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("<h1>Hello World!<h1>"));

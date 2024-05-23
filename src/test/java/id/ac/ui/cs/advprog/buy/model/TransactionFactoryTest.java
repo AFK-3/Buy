@@ -11,7 +11,7 @@ import static org.mockito.Mockito.*;
 
 class TransactionFactoryTest {
     @Test
-    public void testCreateTransaction() {
+    void testCreateTransaction() {
         Cart cart = mock(Cart.class);
 
         Map<String,Integer> listings = new HashMap<>();

@@ -23,7 +23,7 @@ public class AuthMiddleware {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", token);
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
-        System.out.println(authUrl);
+
         try {
             ResponseEntity<String> response = restTemplate.exchange(authUrl + "user/get-username",
                     HttpMethod.GET,
@@ -32,7 +32,6 @@ public class AuthMiddleware {
             );
             return response.getBody();
         } catch (RestClientException e) {
-            System.err.println("Request failed: " + e.getMessage());
             return null;
         }
     }
@@ -53,7 +52,6 @@ public class AuthMiddleware {
             );
             return response.getBody();
         } catch (RestClientException e) {
-            System.err.println("Request failed: " + e.getMessage());
             return null;
         }
     }

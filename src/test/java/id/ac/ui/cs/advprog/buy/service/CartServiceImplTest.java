@@ -1,6 +1,5 @@
 package id.ac.ui.cs.advprog.buy.service;
 
-import id.ac.ui.cs.advprog.buy.middleware.AuthMiddleware;
 import id.ac.ui.cs.advprog.buy.model.Cart;
 import id.ac.ui.cs.advprog.buy.repository.CartRepository;
 import org.junit.jupiter.api.Test;
@@ -174,7 +173,7 @@ class CartServiceImplTest {
 
         cartService.updateTotalPrice("1","a");
 
-        assertEquals(cart.getTotalPrice(),700);
+        assertEquals(700, cart.getTotalPrice());
     }
 
     private static List<Cart> getCarts() {
