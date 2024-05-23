@@ -30,7 +30,7 @@ class TransactionRepositoryTest {
         transactionRepository.save(transaction);
 
         List<Transaction> transactionList = transactionRepository.findAll();
-        assertEquals(transactionList.size(),1);
+        assertEquals(1,transactionList.size());
 
         Transaction savedTransaction = transactionList.getFirst();
         assertEquals(transaction.getTransactionId(),savedTransaction.getTransactionId());
@@ -39,7 +39,7 @@ class TransactionRepositoryTest {
     @Test
     void testFindAllEmpty(){
         List<Transaction> transactionList = transactionRepository.findAll();
-        assertEquals(transactionList.size(),0);
+        assertEquals(0,transactionList.size());
     }
 
     @Test
@@ -58,7 +58,7 @@ class TransactionRepositoryTest {
         transactionRepository.save(newTransaction);
 
         List<Transaction> transactionList = transactionRepository.findAll();
-        assertEquals(transactionList.size(),1);
+        assertEquals(1,transactionList.size());
 
         Transaction savedTransaction = transactionList.getFirst();
         assertEquals(newTransaction.getTransactionId(),savedTransaction.getTransactionId());
@@ -78,7 +78,7 @@ class TransactionRepositoryTest {
         transactionRepository.save(transaction);
 
         List<Transaction> userTransactions = transactionRepository.findByUsername("akun-1");
-        assertEquals(userTransactions.size(),1);
+        assertEquals(1,userTransactions.size());
 
         Transaction savedTransaction = userTransactions.getFirst();
         assertEquals(transaction.getTransactionId(),savedTransaction.getTransactionId());
@@ -87,7 +87,7 @@ class TransactionRepositoryTest {
     @Test
     void testFindByInvalidUsername(){
         List<Transaction> transactionList = transactionRepository.findByUsername("akun-1");
-        assertEquals(transactionList.size(),0);
+        assertEquals(0,transactionList.size());
     }
 
     @Test

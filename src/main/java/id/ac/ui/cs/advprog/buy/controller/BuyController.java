@@ -28,6 +28,9 @@ public class BuyController {
     @Autowired
     private TransactionService transactionService;
 
+    private static final String FAILED_PARSE = "Failed to parse JSON";
+    private static final String CART_NOT_FOUND = "Cart not found for user: ";
+
     @GetMapping("/")
     @ResponseBody
     public String buyPage(){
@@ -57,7 +60,7 @@ public class BuyController {
             cartService.updateTotalPrice(username,token);
             return ResponseEntity.ok(cart);
         } catch (JSONException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to parse JSON");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILED_PARSE);
         }
     }
 
@@ -76,9 +79,9 @@ public class BuyController {
             cartService.updateTotalPrice(username,token);
             return ResponseEntity.ok(updatedCart);
         } catch (NoSuchElementException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart not found for user: " + username);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(CART_NOT_FOUND + username);
         } catch (JSONException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to parse JSON");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILED_PARSE);
         }
     }
 
@@ -97,9 +100,9 @@ public class BuyController {
             cartService.updateTotalPrice(username,token);
             return ResponseEntity.ok(updatedCart);
         } catch (NoSuchElementException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart not found for user: " + username);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(CART_NOT_FOUND + username);
         } catch (JSONException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to parse JSON");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILED_PARSE);
         }
     }
 
@@ -118,9 +121,9 @@ public class BuyController {
             cartService.updateTotalPrice(username,token);
             return ResponseEntity.ok(updatedCart);
         } catch (NoSuchElementException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart not found for user: " + username);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(CART_NOT_FOUND + username);
         } catch (JSONException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to parse JSON");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(FAILED_PARSE);
         }
     }
 
@@ -130,7 +133,7 @@ public class BuyController {
             Cart cart = cartService.findByUsername(username);
             return ResponseEntity.ok(cart);
         } catch (NoSuchElementException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart not found for user: " + username);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(CART_NOT_FOUND + username);
         }
     }
 
@@ -165,7 +168,7 @@ public class BuyController {
             return ResponseEntity.ok(transaction);
 
         } catch (NoSuchElementException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart not found for user: " + username);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(CART_NOT_FOUND + username);
         } catch (JsonProcessingException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not create payment transaction");
         }

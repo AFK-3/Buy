@@ -3,7 +3,6 @@ package id.ac.ui.cs.advprog.buy.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import id.ac.ui.cs.advprog.buy.enums.TransactionStatus;
-import id.ac.ui.cs.advprog.buy.middleware.AuthMiddleware;
 import id.ac.ui.cs.advprog.buy.model.Transaction;
 import id.ac.ui.cs.advprog.buy.repository.TransactionRepository;
 import org.junit.jupiter.api.Test;

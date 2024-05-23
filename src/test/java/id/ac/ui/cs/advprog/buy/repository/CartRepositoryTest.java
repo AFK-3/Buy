@@ -26,7 +26,7 @@ class CartRepositoryTest {
         cartRepository.save(cart);
 
         List<Cart> cartList = cartRepository.findAll();
-        assertEquals(cartList.size(),1);
+        assertEquals(1,cartList.size());
 
         Cart savedCart = cartList.getFirst();
         assertEquals(savedCart.getUsername(),cart.getUsername());
@@ -37,7 +37,7 @@ class CartRepositoryTest {
     @Test
     void testFindAllIfEmpty(){
         List<Cart> cartList = cartRepository.findAll();
-        assertEquals(cartList.size(),0);
+        assertEquals(0,cartList.size());
     }
 
     @Test
@@ -57,7 +57,7 @@ class CartRepositoryTest {
         cartRepository.save(cart2);
 
         List<Cart> cartList = cartRepository.findAll();
-        assertEquals(cartList.size(),2);
+        assertEquals(2,cartList.size());
 
         Cart savedCart = cartList.getFirst();
         assertEquals(cart1.getUsername(),savedCart.getUsername());
@@ -82,7 +82,7 @@ class CartRepositoryTest {
         cartRepository.save(newCart);
 
         List<Cart> cartList = cartRepository.findAll();
-        assertEquals(cartList.size(),1);
+        assertEquals(1,cartList.size());
 
         Cart savedCart = cartList.getFirst();
         assertEquals(newCart.getUsername(),savedCart.getUsername());
